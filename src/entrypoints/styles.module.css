@@ -1,3 +1,62 @@
 .inspector {
   margin-top: var(--spacing-l);
 }
+
+.content {
+  line-height: 1.6;
+}
+
+.content h2 {
+  margin-bottom: var(--spacing-m);
+  font-size: 24px;
+}
+
+.content h3 {
+  margin-top: var(--spacing-l);
+  margin-bottom: var(--spacing-s);
+  font-size: 18px;
+}
+
+.content p {
+  margin-bottom: var(--spacing-m);
+}
+
+.content ul,
+.content ol {
+  margin-bottom: var(--spacing-m);
+  padding-left: var(--spacing-l);
+}
+
+.content li {
+  margin-bottom: var(--spacing-xs);
+}
+
+.content code {
+  background-color: var(--color-neutral-100);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.9em;
+}
+
+.content pre {
+  background-color: var(--color-neutral-100);
+  padding: var(--spacing-m);
+  border-radius: 6px;
+  overflow-x: auto;
+  margin-bottom: var(--spacing-m);
+}
+
+.content pre code {
+  background-color: transparent;
+  padding: 0;
+}
+
+.content a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.content a:hover {
+  text-decoration: underline;
+}

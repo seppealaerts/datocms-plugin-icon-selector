@@ -9,11 +9,10 @@ connect({
     return render(<ConfigScreen ctx={ctx} />);
   },
   overrideFieldExtensions(field, _ctx) {
-    // Only apply to string fields with the API key "icon" or fields that have a hint
+    // Only apply to string fields with the API key "icon"
     if (
       field.attributes.field_type === "string" &&
-      (field.attributes.api_key === "icon" ||
-        field.attributes.hint?.includes("lucide-icon"))
+      field.attributes.api_key === "icon"
     ) {
       return {
         editor: {

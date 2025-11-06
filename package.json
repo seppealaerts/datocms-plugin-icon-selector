@@ -1,13 +1,17 @@
 {
-  "name": "datocms-plugin-<INSERT-YOUR-PACKAGE-NAME-HERE>",
-  "description": "<INSERT-YOUR-PLUGIN-DESCRIPTION-HERE>",
-  "homepage": "https://github.com/<USER>/<REPO>",
+  "name": "datocms-plugin-lucide-icon-selector",
+  "description": "A plugin for DatoCMS that provides a searchable icon selector using Lucide Icons",
+  "homepage": "https://github.com/seppealaerts/datocms-plugin-icon-selector",
   "private": false,
   "version": "0.1.0",
-  "author": "<YOUR-NAME> <<YOUR-EMAIL>>",
+  "author": "Seppe Alaerts <hello@seppealaerts.be>",
+  "license": "MIT",
   "type": "module",
   "keywords": [
-    "datocms-plugin"
+    "datocms-plugin",
+    "lucide",
+    "icon",
+    "selector"
   ],
   "datoCmsPlugin": {
     "title": "DatoCMS plugin test",
