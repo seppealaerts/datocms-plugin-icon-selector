@@ -1,0 +1,3 @@
+# DatoCMS plugin test
+
+<INSERT-YOUR-PLUGIN-DESCRIPTION-HERE>
