@@ -3,5 +3,7 @@
 import * as LucideIcons from "lucide-react";
 
 export const lucideIconNames = Object.keys(LucideIcons)
-  .filter((iconName) => !iconName.includes("Icon"))
+  .filter(
+    (iconName) => !iconName.includes("Icon") && !iconName.includes("Lucide")
+  )
   .sort(); // Sort alphabetically for better UX
