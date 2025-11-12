@@ -4,6 +4,7 @@ import { ChevronDown, X } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import * as LucideIcons from "lucide-react";
 import { lucideIconNames } from "../utils/lucideIcons";
+import s from "./styles.module.css";
 
 type Props = {
   ctx: RenderFieldExtensionCtx;
@@ -41,11 +42,14 @@ export default function IconSelectField({ ctx }: Props) {
   const [selectedValue, setSelectedValue] = useState<string>(formValue);
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
   const containerRef = useRef<HTMLDivElement>(null);
   const inputContainerRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const isSettingValueRef = useRef(false);
   const lastFormValueRef = useRef<string>(formValue);
+
+  const ICONS_PER_PAGE = 100;
 
   // Sync with form values - always update when formValue changes (unless we're setting it)
   useEffect(() => {
@@ -64,17 +68,27 @@ export default function IconSelectField({ ctx }: Props) {
   }, [formValue]);
 
   // Filter icons based on search term
-  const filteredIcons = lucideIconNames
-    .filter((name) => {
-      if (!searchTerm) return true;
-      return name.toLowerCase().includes(searchTerm.toLowerCase());
-    })
-    .slice(0, 100); // Limit to first 100 for performance
+  const allFilteredIcons = lucideIconNames.filter((name) => {
+    if (!searchTerm) return true;
+    return name.toLowerCase().includes(searchTerm.toLowerCase());
+  });
+
+  // Calculate pagination
+  const totalPages = Math.ceil(allFilteredIcons.length / ICONS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ICONS_PER_PAGE;
+  const endIndex = startIndex + ICONS_PER_PAGE;
+  const filteredIcons = allFilteredIcons.slice(startIndex, endIndex);
+
+  // Reset to page 1 when search term changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
 
   const handleSelect = async (iconName: string) => {
     setSelectedValue(iconName);
     setIsOpen(false);
     setSearchTerm("");
+    setCurrentPage(1);
     isSettingValueRef.current = true;
     lastFormValueRef.current = iconName;
     await ctx.setFieldValue(ctx.fieldPath, iconName);
@@ -84,6 +98,7 @@ export default function IconSelectField({ ctx }: Props) {
     setSelectedValue("");
     setIsOpen(false);
     setSearchTerm("");
+    setCurrentPage(1);
     isSettingValueRef.current = true;
     lastFormValueRef.current = "";
     await ctx.setFieldValue(ctx.fieldPath, "");
@@ -100,6 +115,7 @@ export default function IconSelectField({ ctx }: Props) {
         !dropdownRef.current.contains(target)
       ) {
         setIsOpen(false);
+        setCurrentPage(1);
       }
     };
 
@@ -121,7 +137,7 @@ export default function IconSelectField({ ctx }: Props) {
           const inputHeight =
             inputContainerRef.current.getBoundingClientRect().height;
           const dropdownHeight = Math.min(
-            300,
+            490,
             dropdownRef.current.scrollHeight
           );
           ctx.setHeight(inputHeight + dropdownHeight + 10);
@@ -143,36 +159,10 @@ export default function IconSelectField({ ctx }: Props) {
 
   return (
     <Canvas ctx={ctx}>
-      <div
-        ref={containerRef}
-        style={{
-          position: "relative",
-          width: "100%",
-          minHeight: "40px",
-          overflow: "visible",
-          zIndex: 1,
-        }}
-      >
-        <div
-          ref={inputContainerRef}
-          style={{
-            position: "relative",
-            display: "flex",
-            alignItems: "center",
-            width: "100%",
-          }}
-        >
+      <div ref={containerRef} className={s.container}>
+        <div ref={inputContainerRef} className={s.inputContainer}>
           {SelectedIcon && (
-            <div
-              style={{
-                position: "absolute",
-                left: "12px",
-                zIndex: 1,
-                display: "flex",
-                alignItems: "center",
-                pointerEvents: "none",
-              }}
-            >
+            <div className={s.selectedIconWrapper}>
               <SelectedIcon size={18} />
             </div>
           )}
@@ -182,29 +172,17 @@ export default function IconSelectField({ ctx }: Props) {
             label=""
             value={selectedValue}
             placeholder="Select an icon..."
-            onChange={() => {}} // Required prop, but field is readOnly so this is a no-op
+            onChange={() => {}}
             textInputProps={{
               disabled: ctx.disabled,
               readOnly: true,
               onClick: () => !ctx.disabled && setIsOpen(!isOpen),
-              style: {
-                cursor: ctx.disabled ? "not-allowed" : "pointer",
-                paddingLeft: SelectedIcon ? "40px" : undefined,
-                paddingRight: "40px",
-              },
+              className: `${SelectedIcon ? s.textInputWithIcon : s.textInput} ${
+                ctx.disabled ? s.textInputDisabled : s.textInputEnabled
+              }`,
             }}
           />
-          <div
-            style={{
-              position: "absolute",
-              right: "12px",
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              pointerEvents: "none",
-              zIndex: 1,
-            }}
-          >
+          <div className={s.actionsContainer}>
             {selectedValue && (
               <button
                 type="button"
@@ -213,46 +191,21 @@ export default function IconSelectField({ ctx }: Props) {
                   handleClear();
                 }}
                 disabled={ctx.disabled}
-                style={{
-                  background: "none",
-                  border: "none",
-                  cursor: ctx.disabled ? "not-allowed" : "pointer",
-                  padding: "4px",
-                  display: "flex",
-                  alignItems: "center",
-                  pointerEvents: "auto",
-                  opacity: ctx.disabled ? 0.5 : 1,
-                }}
-                onMouseEnter={(e) => {
-                  if (!ctx.disabled) {
-                    e.currentTarget.style.opacity = "0.7";
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!ctx.disabled) {
-                    e.currentTarget.style.opacity = "1";
-                  }
-                }}
+                className={`${s.clearButton} ${
+                  ctx.disabled ? s.clearButtonDisabled : ""
+                }`}
               >
                 <X size={16} />
               </button>
             )}
-            <div style={{ pointerEvents: "auto" }}>
+            <div className={s.actionsContainerInteractive}>
               <button
                 type="button"
                 onClick={() => !ctx.disabled && setIsOpen(!isOpen)}
                 disabled={ctx.disabled}
-                style={{
-                  background: "none",
-                  border: "none",
-                  cursor: ctx.disabled ? "not-allowed" : "pointer",
-                  padding: "4px",
-                  display: "flex",
-                  alignItems: "center",
-                  opacity: ctx.disabled ? 0.5 : 1,
-                  transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
-                  transition: "transform 0.2s",
-                }}
+                className={`${s.chevronButton} ${
+                  isOpen ? s.chevronButtonOpen : ""
+                } ${ctx.disabled ? s.chevronButtonDisabled : ""}`}
               >
                 <ChevronDown size={16} />
               </button>
@@ -261,29 +214,8 @@ export default function IconSelectField({ ctx }: Props) {
         </div>
 
         {isOpen && (
-          <div
-            ref={dropdownRef}
-            style={{
-              position: "absolute",
-              top: "100%",
-              left: 0,
-              right: 0,
-              marginTop: "-1px",
-              backgroundColor: "white",
-              border: "1px solid #d1d5db",
-              borderTop: "none",
-              borderRadius: "0 0 4px 4px",
-              boxShadow:
-                "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
-              zIndex: 1000,
-              maxHeight: "300px",
-              overflow: "hidden",
-              display: "flex",
-              flexDirection: "column",
-              fontFamily: "inherit",
-            }}
-          >
-            <div style={{ padding: "8px", borderBottom: "1px solid #e5e7eb" }}>
+          <div ref={dropdownRef} className={s.dropdown}>
+            <div className={s.dropdownSearch}>
               <TextField
                 id="icon-search"
                 name="icon-search"
@@ -296,23 +228,9 @@ export default function IconSelectField({ ctx }: Props) {
                 }}
               />
             </div>
-            <div
-              style={{
-                overflowY: "auto",
-                maxHeight: "250px",
-              }}
-            >
-              {filteredIcons.length === 0 ? (
-                <div
-                  style={{
-                    padding: "16px",
-                    textAlign: "center",
-                    fontFamily: "inherit",
-                    color: "#6b7280",
-                  }}
-                >
-                  No icons found
-                </div>
+            <div className={s.listContainer}>
+              {allFilteredIcons.length === 0 ? (
+                <div className={s.listEmpty}>No icons found</div>
               ) : (
                 filteredIcons.map((iconName) => {
                   const Icon = getIconComponent(iconName);
@@ -320,59 +238,45 @@ export default function IconSelectField({ ctx }: Props) {
                     <div
                       key={iconName}
                       onClick={() => handleSelect(iconName)}
-                      style={{
-                        padding: "10px 16px",
-                        cursor: "pointer",
-                        borderBottom: "1px solid #f3f4f6",
-                        backgroundColor:
-                          selectedValue === iconName ? "#f3f4f6" : "white",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "12px",
-                        fontFamily: "inherit",
-                        fontSize: "14px",
-                        transition: "background-color 0.15s",
-                      }}
-                      onMouseEnter={(e) => {
-                        if (selectedValue !== iconName) {
-                          e.currentTarget.style.backgroundColor = "#f9fafb";
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (selectedValue !== iconName) {
-                          e.currentTarget.style.backgroundColor = "white";
-                        }
-                      }}
+                      className={`${s.listItem} ${
+                        selectedValue === iconName ? s.listItemActive : ""
+                      }`}
                     >
-                      {Icon && (
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            width: "24px",
-                            height: "24px",
-                            flexShrink: 0,
-                            color: "#374151",
-                          }}
-                        >
-                          <Icon size={18} />
-                        </div>
-                      )}
-                      <span
-                        style={{
-                          fontFamily: "inherit",
-                          color: "#111827",
-                          fontSize: "14px",
-                        }}
-                      >
-                        {iconName}
-                      </span>
+                      {Icon && <Icon size={18} />}
+                      {iconName}
                     </div>
                   );
                 })
               )}
             </div>
+            {totalPages > 1 && (
+              <div className={s.pagination}>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.max(1, prev - 1))
+                  }
+                  disabled={currentPage === 1}
+                  className={s.paginationButton}
+                >
+                  Previous
+                </button>
+                <span className={s.paginationInfo}>
+                  Page {currentPage} of {totalPages} ({allFilteredIcons.length}{" "}
+                  icons)
+                </span>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.min(totalPages, prev + 1))
+                  }
+                  disabled={currentPage === totalPages}
+                  className={s.paginationButton}
+                >
+                  Next
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>
