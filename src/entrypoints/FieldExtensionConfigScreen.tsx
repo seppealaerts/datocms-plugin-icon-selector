@@ -18,22 +18,18 @@ const getIconComponent = (iconName: string) => {
 
 const ICONS_PER_PAGE = 100;
 
-// Exact config screen dimensions derived from CSS
-const CONFIG_TITLE_HEIGHT = 21; // heading text + margin-bottom
-const CONFIG_SEARCH_HEIGHT = 68.5; // TextField (label + input)
-const CONFIG_GAP = 12;
-const CONFIG_ACTIONS_HEIGHT = 33.5; // action buttons
-const CONFIG_GRID_MAX_HEIGHT = 155; // reduced from 176 to accommodate title
-const CONFIG_GRID_PADDING = 8; // 4px top + 4px bottom
+const CONFIG_SEARCH_HEIGHT = 88.9;
+const CONFIG_ACTIONS_HEIGHT = 33.5;
+const CONFIG_GRID_HEIGHT = 184;
 const CONFIG_PAGINATION_HEIGHT = 43.5;
+const CONFIG_GAP = 12;
 
 const CONFIG_HEIGHT = Math.ceil(
-  CONFIG_TITLE_HEIGHT +
-    CONFIG_SEARCH_HEIGHT +
+  CONFIG_SEARCH_HEIGHT +
     CONFIG_GAP +
     CONFIG_ACTIONS_HEIGHT +
     CONFIG_GAP +
-    (CONFIG_GRID_MAX_HEIGHT + CONFIG_GRID_PADDING) +
+    CONFIG_GRID_HEIGHT +
     CONFIG_PAGINATION_HEIGHT
 );
 
@@ -92,13 +88,11 @@ export default function FieldExtensionConfigScreen({ ctx }: Props) {
     <Canvas ctx={ctx} noAutoResizer>
       <div className={s.configScreen}>
         <div className={s.configSearch}>
-          <h2 className={s.configTitle}>
-            Pick which icons are available. Leave empty to allow all icons.
-          </h2>
           <TextField
             id="icon-config-search"
             name="icon-config-search"
             label="Search icons"
+            hint="Leave empty to allow all icons."
             value={searchTerm}
             placeholder="Type to filter icons..."
             onChange={setSearchTerm}
