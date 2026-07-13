@@ -52,6 +52,10 @@ export default function FieldExtensionConfigScreen({ ctx }: Props) {
     [selectedIcons, ctx]
   );
 
+  useEffect(() => {
+    ctx.setHeight(280);
+  }, [ctx]);
+
   const handleSelectAllFiltered = useCallback(() => {
     const newSelection = Array.from(
       new Set([...selectedIcons, ...allFilteredIcons])
@@ -66,7 +70,7 @@ export default function FieldExtensionConfigScreen({ ctx }: Props) {
   }, [ctx]);
 
   return (
-    <Canvas ctx={ctx}>
+    <Canvas ctx={ctx} noAutoResizer>
       <div className={s.configScreen}>
         <div className={s.configSearch}>
           <TextField
