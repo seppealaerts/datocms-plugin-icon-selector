@@ -67,8 +67,16 @@ export default function IconSelectField({ ctx }: Props) {
     }
   }, [formValue]);
 
+  const allowedIcons = ctx.parameters
+    ? (ctx.parameters.allowedIcons as string[] | undefined)
+    : undefined;
+  const baseIconList =
+    Array.isArray(allowedIcons) && allowedIcons.length > 0
+      ? allowedIcons.filter((name) => lucideIconNames.includes(name))
+      : lucideIconNames;
+
   // Filter icons based on search term
-  const allFilteredIcons = lucideIconNames.filter((name) => {
+  const allFilteredIcons = baseIconList.filter((name) => {
     if (!searchTerm) return true;
     return name.toLowerCase().includes(searchTerm.toLowerCase());
   });
