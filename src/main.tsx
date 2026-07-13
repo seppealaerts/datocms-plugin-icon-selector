@@ -47,7 +47,7 @@ connect({
         name: "Lucide Icon Selector",
         type: "editor" as const,
         fieldTypes: ["string"],
-        configurable: { initialHeight: 400 },
+        configurable: { initialHeight: 280 },
         initialHeight: 60,
       },
     ];
