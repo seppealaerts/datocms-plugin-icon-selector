@@ -56,7 +56,7 @@ export default function FieldExtensionConfigScreen({ ctx }: Props) {
   useLayoutEffect(() => {
     if (screenRef.current) {
       const { height } = screenRef.current.getBoundingClientRect();
-      ctx.setHeight(Math.ceil(height));
+      ctx.setHeight(Math.max(250, Math.ceil(height)));
     }
   });
 
