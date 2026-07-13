@@ -7,7 +7,7 @@ A custom field extension for DatoCMS that provides a searchable icon selector us
 - 🎨 **Visual Icon Selection**: Browse and select from hundreds of Lucide icons with visual previews
 - 🔍 **Search Functionality**: Quickly find icons by typing their name
 - 💾 **Simple Storage**: Icons are stored as string values (icon names) that you can use with the Lucide React library
-- 🎯 **Easy Integration**: Automatically activates for fields with the API key `icon` or hint `lucide-icon`
+- 🎯 **Easy Integration**: Can be manually assigned to any string field in the DatoCMS schema editor
 - ✨ **Modern UI**: Clean, intuitive interface that adapts to DatoCMS light and dark mode
 - 🎛️ **Per-field Icon Filtering**: Restrict which icons are available per field via the field configuration screen
 - 🔧 **Manual Assignment**: Can be manually assigned to any string field in the DatoCMS schema editor
@@ -27,17 +27,7 @@ A custom field extension for DatoCMS that provides a searchable icon selector us
 
 ## Setting up a field
 
-There are two ways to use the Icon Selector on a field:
-
-### Auto-activation (recommended)
-
-1. Create a **String** field in your DatoCMS model
-2. Set the field API key to `icon` (or add the hint `lucide-icon`)
-3. The field will automatically use the Lucide Icon Selector
-
-### Manual assignment
-
-You can also assign the **Lucide Icon Selector** editor to any string field via the DatoCMS schema editor:
+Assign the **Lucide Icon Selector** editor to any string field via the DatoCMS schema editor:
 
 1. Create a **String** field in your DatoCMS model
 2. In the field's **Presentation** settings, look for the **Editor** dropdown
@@ -56,7 +46,7 @@ When you manually assign the Lucide Icon Selector to a string field, you can con
 6. Use **Select all filtered** to bulk-select visible icons, or **Clear all** to reset the selection
 7. Save your changes
 
-When icons are whitelisted, content editors can only pick from the configured set. If no icons are whitelisted (or the field uses the auto-activation path), all Lucide icons are available.
+When icons are whitelisted, content editors can only pick from the configured set. If no icons are whitelisted, all Lucide icons are available.
 
 To reset the whitelist back to "all icons", clear the configuration settings for that field.
 
@@ -89,13 +79,12 @@ return IconComponent ? <IconComponent size={24} /> : null;
 
 The plugin works by:
 
-1. **Field Detection**: Automatically detects string fields with API key `icon` or the `lucide-icon` hint, or can be manually assigned to any string field
-2. **Custom Editor**: Replaces the default text input with a custom icon selector
-3. **Icon Loading**: Dynamically loads and displays all available Lucide icons
-4. **Search & Filter**: Provides real-time search to filter through hundreds of icons
-5. **Per-field Configuration**: The field-level configuration screen lets you whitelist specific icons per field
-6. **Theme Adaptation**: The plugin automatically adapts to DatoCMS light and dark mode via the built-in `Canvas` component and native CSS custom properties
-7. **Value Storage**: Stores the selected icon name as a string value in DatoCMS
+1. **Custom Editor**: Replaces the default text input with a custom icon selector when manually assigned to a string field
+2. **Icon Loading**: Dynamically loads and displays all available Lucide icons
+3. **Search & Filter**: Provides real-time search to filter through hundreds of icons
+4. **Per-field Configuration**: The field-level configuration screen lets you whitelist specific icons per field
+5. **Theme Adaptation**: The plugin automatically adapts to DatoCMS light and dark mode via the built-in `Canvas` component and native CSS custom properties
+6. **Value Storage**: Stores the selected icon name as a string value in DatoCMS
 
 ## Development
 
