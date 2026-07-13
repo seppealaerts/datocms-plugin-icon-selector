@@ -1,6 +1,6 @@
 import type { RenderManualFieldExtensionConfigScreenCtx } from "datocms-plugin-sdk";
 import { Canvas, TextField } from "datocms-react-ui";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import * as LucideIcons from "lucide-react";
 import { lucideIconNames } from "../utils/lucideIcons";
 import s from "./styles.module.css";
@@ -18,27 +18,13 @@ const getIconComponent = (iconName: string) => {
 
 const ICONS_PER_PAGE = 100;
 
-const CONFIG_SEARCH_HEIGHT = 88.9;
-const CONFIG_ACTIONS_HEIGHT = 33.5;
-const CONFIG_GRID_HEIGHT = 184;
-const CONFIG_PAGINATION_HEIGHT = 43.5;
-const CONFIG_GAP = 12;
-
-const CONFIG_HEIGHT = Math.ceil(
-  CONFIG_SEARCH_HEIGHT +
-    CONFIG_GAP +
-    CONFIG_ACTIONS_HEIGHT +
-    CONFIG_GAP +
-    CONFIG_GRID_HEIGHT +
-    CONFIG_PAGINATION_HEIGHT
-);
-
 export default function FieldExtensionConfigScreen({ ctx }: Props) {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedIcons, setSelectedIcons] = useState<string[]>(
     (ctx.parameters.allowedIcons as string[] | undefined) || []
   );
+  const screenRef = useRef<HTMLDivElement>(null);
 
   const allFilteredIcons = lucideIconNames.filter((name) => {
     if (!searchTerm) return true;
@@ -67,9 +53,12 @@ export default function FieldExtensionConfigScreen({ ctx }: Props) {
     [selectedIcons, ctx]
   );
 
-  useEffect(() => {
-    ctx.setHeight(CONFIG_HEIGHT);
-  }, [ctx]);
+  useLayoutEffect(() => {
+    if (screenRef.current) {
+      const { height } = screenRef.current.getBoundingClientRect();
+      ctx.setHeight(Math.ceil(height));
+    }
+  });
 
   const handleSelectAllFiltered = useCallback(() => {
     const newSelection = Array.from(
@@ -86,7 +75,7 @@ export default function FieldExtensionConfigScreen({ ctx }: Props) {
 
   return (
     <Canvas ctx={ctx} noAutoResizer>
-      <div className={s.configScreen}>
+      <div ref={screenRef} className={s.configScreen}>
         <div className={s.configSearch}>
           <TextField
             id="icon-config-search"
