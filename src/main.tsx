@@ -1,4 +1,4 @@
-import { connect } from "datocms-plugin-sdk";
+import { connect, OnBootCtx, FieldAppearanceChange } from "datocms-plugin-sdk";
 import "datocms-react-ui/styles.css";
 import ConfigScreen from "./entrypoints/ConfigScreen";
 import FieldExtensionConfigScreen from "./entrypoints/FieldExtensionConfigScreen";
@@ -7,6 +7,31 @@ import { render } from "./utils/render";
 import { lucideIconNames } from "./utils/lucideIcons";
 
 connect({
+  async onBoot(ctx: OnBootCtx) {
+    if (ctx.plugin.attributes.parameters?.migratedFromLegacyPlugin) {
+      return;
+    }
+
+    if (!ctx.currentRole.meta.final_permissions.can_edit_schema) {
+      return;
+    }
+
+    const fields = await ctx.loadFieldsUsingPlugin();
+
+    for (const field of fields) {
+      await ctx.updateFieldAppearance(field.id, [
+        {
+          operation: "updateEditor",
+          newFieldExtensionId: "lucide-icon-select",
+        } satisfies FieldAppearanceChange,
+      ]);
+    }
+
+    await ctx.updatePluginParameters({
+      ...ctx.plugin.attributes.parameters,
+      migratedFromLegacyPlugin: true,
+    });
+  },
   renderConfigScreen(ctx) {
     return render(<ConfigScreen ctx={ctx} />);
   },
