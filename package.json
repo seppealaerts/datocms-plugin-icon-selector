@@ -3,7 +3,7 @@
   "description": "A plugin for DatoCMS that provides a searchable icon selector using Lucide Icons",
   "homepage": "https://github.com/seppealaerts/datocms-plugin-icon-selector",
   "private": false,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "Seppe Alaerts <hello@seppealaerts.be>",
   "license": "MIT",
   "type": "module",
