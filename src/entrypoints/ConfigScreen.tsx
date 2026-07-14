@@ -30,6 +30,8 @@ export default function ConfigScreen({ ctx }: Props) {
           <li>Visual icon previews in the selector</li>
           <li>Real-time search to find icons quickly</li>
           <li>Hundreds of icons from the Lucide library</li>
+          <li>Per-field whitelist configuration</li>
+          <li>Light and dark mode support</li>
           <li>Simple string storage for easy integration</li>
         </ul>
 
@@ -39,11 +41,16 @@ export default function ConfigScreen({ ctx }: Props) {
             Create a <strong>String</strong> field in your DatoCMS model
           </li>
           <li>
-            Set the field API key to <code>icon</code>
+            In the field's <strong>Presentation</strong> settings, select{" "}
+            <strong>Lucide Icon Selector</strong> from the <strong>Editor</strong>{" "}
+            dropdown
           </li>
           <li>
-            The field will automatically use the icon selector dropdown when
-            editing content
+            Optionally click the gear icon to whitelist which icons are available
+            for that field
+          </li>
+          <li>
+            When editing content, the field will show the icon selector
           </li>
         </ol>
 

@@ -7,23 +7,23 @@ A custom field extension for DatoCMS that provides a searchable icon selector us
 - 🎨 **Visual Icon Selection**: Browse and select from hundreds of Lucide icons with visual previews
 - 🔍 **Search Functionality**: Quickly find icons by typing their name
 - 💾 **Simple Storage**: Icons are stored as string values (icon names) that you can use with the Lucide React library
-- 🎯 **Easy Integration**: Can be manually assigned to any string field in the DatoCMS schema editor
+- 🎯 **Manual Assignment**: Can be assigned to any string field in the DatoCMS schema editor
 - ✨ **Modern UI**: Clean, intuitive interface that adapts to DatoCMS light and dark mode
 - 🎛️ **Per-field Icon Filtering**: Restrict which icons are available per field via the field configuration screen
-- 🔧 **Manual Assignment**: Can be manually assigned to any string field in the DatoCMS schema editor
 
 ## Installation
 
-1. Install the plugin in your DatoCMS project:
+### From the DatoCMS Marketplace
 
-   - Go to your DatoCMS project settings
-   - Navigate to Plugins
-   - Click "Add plugin" and select this plugin
+1. Go to your DatoCMS project settings
+2. Navigate to **Plugins**
+3. Click **Add plugin** and select **Lucide Icon Selector** from the Marketplace
 
-2. Or install via npm (for development):
-   ```bash
-   npm install
-   ```
+### For development
+
+```bash
+npm install
+```
 
 ## Setting up a field
 
