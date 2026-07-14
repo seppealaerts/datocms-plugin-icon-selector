@@ -9,8 +9,18 @@ function isReactComponentType(
   );
 }
 
+function isIconComponentName(name: string): boolean {
+  return (
+    /^[A-Z]/.test(name) &&
+    !name.includes("Icon") &&
+    !name.includes("Lucide")
+  );
+}
+
 export const lucideIconNames = Object.keys(LucideIcons)
-  .filter((iconName) =>
-    isReactComponentType(LucideIcons[iconName as keyof typeof LucideIcons])
+  .filter(
+    (iconName) =>
+      isIconComponentName(iconName) &&
+      isReactComponentType(LucideIcons[iconName as keyof typeof LucideIcons])
   )
   .sort();
